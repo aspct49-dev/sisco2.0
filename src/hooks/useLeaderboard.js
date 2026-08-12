@@ -128,6 +128,10 @@ export function useLeaderboard(casinoId = casinos[0].id) {
 
   return {
     loading: !live && !error,
+    // True only once a fetch has actually succeeded at least once — lets
+    // callers tell "confirmed empty month" apart from "never got a
+    // response" (which otherwise both look like `players.length === 0`).
+    hasData: !!live,
     error,
     players,
     casino,

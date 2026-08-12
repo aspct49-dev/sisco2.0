@@ -8,7 +8,7 @@ import CasinoBrand from '../components/CasinoBrand'
 import { IconExternal } from '../components/icons'
 
 export default function Leaderboard() {
-  const { players, casino, error, loading } = useLeaderboard(casinos[0].id)
+  const { players, casino, error, loading, hasData } = useLeaderboard(casinos[0].id)
   const top3 = players.slice(0, 3)
   // Countdown ticks to the end of the same period the API is queried with
   // (the current Eastern-time calendar month).
@@ -39,11 +39,6 @@ export default function Leaderboard() {
               Visit {casino.name} <IconExternal />
             </a>
           </div>
-          {error ? (
-            <div style={{ display: 'none' }} data-leaderboard-error={error}>
-              Live leaderboard unavailable: {error}
-            </div>
-          ) : null}
         </div>
 
         {players.length > 0 && <Podium top3={top3} />}
@@ -52,9 +47,19 @@ export default function Leaderboard() {
         <Countdown endDate={periodEnd} />
 
         {/* A month with no wagers yet is the normal state on the 1st — say so
-            plainly rather than rendering an empty podium and table. */}
+            plainly rather than rendering an empty podium and table. That's a
+            DIFFERENT case from a fetch that never succeeded (hasData false,
+            error set), which must say so rather than claim the board is
+            empty. */}
         {loading ? (
           <div className="lb-status">Loading standings…</div>
+        ) : !hasData && error ? (
+          <div className="lb-status">
+            <strong>Live leaderboard temporarily unavailable.</strong>
+            <br />
+            We couldn’t reach {casino.name} just now — standings will appear here
+            as soon as we can. Try refreshing in a minute.
+          </div>
         ) : players.length === 0 ? (
           <div className="lb-status">
             <strong>No wagers yet this month.</strong>

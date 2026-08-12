@@ -17,6 +17,11 @@
 const CACHE_TTL_MS = 2 * 60_000        // serve cached data without re-polling
 const RATE_LIMIT_COOLDOWN_MS = 10 * 60_000 // after a 429, back off this long
 const ERROR_COOLDOWN_MS = 60_000       // after other upstream errors
+// When there's no stale data to fall back on, a long cooldown means a single
+// unlucky retry-exhaustion turns into a full outage with nothing to show —
+// invisible on an always-warm server (there's usually something stale to
+// serve), but very visible on a cold serverless instance. Recover fast instead.
+const NO_FALLBACK_COOLDOWN_MS = 20_000
 
 const cache = new Map()    // key -> { data, fetchedAt }
 const cooldownUntil = new Map() // key -> timestamp
@@ -91,11 +96,11 @@ async function fetchFresh({ casino, from, to, env, key }) {
     cooldownUntil.delete(key)
     return data
   } catch (err) {
-    cooldownUntil.set(
-      key,
-      Date.now() + (err.status === 429 ? RATE_LIMIT_COOLDOWN_MS : ERROR_COOLDOWN_MS),
-    )
     const stale = cache.get(key)
+    const cooldown = !stale
+      ? NO_FALLBACK_COOLDOWN_MS
+      : err.status === 429 ? RATE_LIMIT_COOLDOWN_MS : ERROR_COOLDOWN_MS
+    cooldownUntil.set(key, Date.now() + cooldown)
     if (stale) return { ...stale.data, stale: true }
     throw err
   } finally {

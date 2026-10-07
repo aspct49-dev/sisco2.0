@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { config, casinos } from '../data/leaderboard'
-import { IconDiscord, IconKick, IconX } from './icons'
+import { IconDiscord, IconKick } from './icons'
 
 export default function Footer() {
   const s = config.socials
@@ -28,7 +28,6 @@ export default function Footer() {
           <div className="f-col">
             <h4>Community</h4>
             <a href={s.discord} target="_blank" rel="noreferrer">Discord</a>
-            <a href={s.x} target="_blank" rel="noreferrer">X / Twitter</a>
             <a href={s.kick} target="_blank" rel="noreferrer">Kick</a>
           </div>
 
@@ -66,7 +65,6 @@ export default function Footer() {
           <span>© {new Date().getFullYear()} {config.brandName}. All rights reserved.</span>
           <div style={{ display: 'flex', gap: 16 }}>
             <a href={s.discord} target="_blank" rel="noreferrer" aria-label="Discord"><IconDiscord /></a>
-            <a href={s.x} target="_blank" rel="noreferrer" aria-label="X"><IconX /></a>
             <a href={s.kick} target="_blank" rel="noreferrer" aria-label="Kick"><IconKick /></a>
           </div>
         </div>

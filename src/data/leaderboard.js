@@ -32,7 +32,6 @@ export const config = {
 
   socials: {
     discord: 'https://discord.gg/sisco',
-    x: 'https://x.com/SiscoKid',
     kick: 'https://kick.com/siscokid',
   },
 

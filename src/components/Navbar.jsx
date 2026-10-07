@@ -3,7 +3,7 @@ import { Link, NavLink } from 'react-router-dom'
 import { config } from '../data/leaderboard'
 import {
   IconHome, IconTrophy, IconMedal, IconGift, IconSword,
-  IconDiscord, IconKick, IconX,
+  IconDiscord, IconKick,
 } from './icons'
 
 const nav = [
@@ -45,7 +45,6 @@ function Socials() {
   return (
     <>
       <a href={s.discord} target="_blank" rel="noreferrer" aria-label="Discord"><IconDiscord /></a>
-      <a href={s.x} target="_blank" rel="noreferrer" aria-label="X"><IconX /></a>
       <a href={s.kick} target="_blank" rel="noreferrer" aria-label="Kick"><IconKick /></a>
     </>
   )
